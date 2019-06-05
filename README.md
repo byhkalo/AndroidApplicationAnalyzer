@@ -15,14 +15,6 @@ Wojtek Bomba</p>
 <p style="text-align: right">
 Łukasz Kozieł </p>
 
-
-Content
-
-
-[TOC]
-
-
-
 ## 
 
 
@@ -89,46 +81,33 @@ You need at least 200 gb. You can use external HDD/SSD (but anyway compiling wil
 ### Short Guide:
 
 Creating a case-sensitive disk image. Might take long time.
-
-
-### hdiutil create -type SPARSE -fs 'Case-sensitive Journaled HFS+' -size 200g ~/android.dmg
-
+```
+hdiutil create -type SPARSE -fs 'Case-sensitive Journaled HFS+' -size 200g ~/android.dmg
+```
 Install the Xcode command line tools:
-
-
-### xcode-select --install
-
+```
+xcode-select --install
+```
 Install either [MacPorts](http://www.macports.org/install.php) or [Homebrew](https://brew.sh/) for package management.
 
 Set limit to ~/.bash_profile
-
-
-### ulimit -S -n 1024
-
+```
+ulimit -S -n 1024
+```
 Download source. Visit [this page](https://source.android.com/setup/build/downloading) Please choose master branch, based on [Google Forum's](https://groups.google.com/forum/#!topic/android-building/rwf1jQMhW_s) advice it would be the correct choose. We tried to compile AOSP for android-9.0.0_r36 but we got unsolved bugs and problems on MacOS.
 
 Building. After repo sync just run the next commands in your terminal:
 
 Attention! Mac not support ARM processors! Don’t use ARM. Believe us.
 
-
-### source build/envsetup.sh
-
-
-### lunch 
-
-
-### # choose aosp_x86_64-eng
-
-
-### aosp_x86_64-eng
-
-
-### make -j8
-
-
-### emulator
-
+```
+source build/envsetup.sh
+lunch 
+# choose aosp_x86_64-eng
+aosp_x86_64-eng
+make -j8
+emulator
+```
 If everything was correct before you should get working AOSP.
 
 
@@ -168,285 +147,149 @@ Create Docker container and configure it.
 
 Docker file:
 
-
-### #Base image
-
-
-### FROM ubuntu:16.04
-
-
-### #Labels and Credits
-
-
-### LABEL \
-
-
-###    name="docker-android-kernel" \
-
-
-###    author="Konstantyn Byhkalo <byhkalo.konstantyn@gmail.com>" \
-
-
-###    maintainer="Konstantyn Byhkalo <byhkalo.konstantyn@gmail.com>" \
-
-
-###    contributor_1="Konstantyn Byhkalo <byhkalo.konstantyn@gmail.com>" \
-
-
-### 
-        description="Docker image for building Android common 4.14 kernel."
-
-
-### 
-    RUN apt-get update && \
-
-
-### 
-      apt-get install -y bc build-essential make python-lunch qt4-default gcc-multilib distcc ccache
-
-
-### 
+```
+#Base image
+FROM ubuntu:16.04
+#Labels and Credits
+ LABEL \
+    name="docker-android-kernel" \
+    author="Konstantyn Byhkalo <byhkalo.konstantyn@gmail.com>" \
+    maintainer="Konstantyn Byhkalo <byhkalo.konstantyn@gmail.com>" \
+    contributor_1="Konstantyn Byhkalo <byhkalo.konstantyn@gmail.com>" \ 
+        description="Docker image for building Android common 4.14 kernel." 
+    RUN apt-get update && \ 
+      apt-get install -y bc build-essential make python-lunch qt4-default gcc-multilib distcc ccache 
     RUN apt install libelf-dev
-
-
-### 
     RUN apt install libelf-devel
-
+```
 Command line:
-
-
-### 
+```
     docker build -t goldfish_android_kernel .
-
+```
 Or just run the first script:
-
-
-### 
+```
     sh 1.first-run-docker.sh
-
+```
 
 ### Step 2 - Into the Docker
 
 Enter to the docker image:
-
-
-### 
-    docker run -v $PWD/android-4.14-p-release/:/opt/kernel \
-
-
-### 
+```
+    docker run -v $PWD/android-4.14-p-release/:/opt/kernel \ 
         -v $PWD/android-ndk:/opt/android-ndk \
-
-
-### 
         -v $PWD/androidLKM:/opt/androidLKM \
-
-
-### 
         -v $PWD/3.third-run-docker.sh:/3.third-run-docker.sh \
-
-
-### 
-        -v $PWD/4.fourth-run-docker.sh:/opt/4.fourth-run-docker.sh \
-
-
-### 
+        -v $PWD/4.fourth-run-docker.sh:/opt/4.fourth-run-docker.sh \ 
         -it goldfish_android_kernel bash
-
+```
 Or just run the next script:
 
-
-### 
+``` 
     sh 2.second-run-docker.sh
-
+```
 
 ### Step 3.1 - Configure Kernel environment
 
 In the Docker environment run next commands:
 
-
-### 
+```
     cd opt/kernel
-
-
-### 
     echo $PWD
-
-
-### 
+    
     export ARCH=x86_64
-
-
-### 
     echo "ARCH Configured \n"
-
-
-### 
+    
     export CROSS_COMPILE=x86_64-linux-android-
-
-
-### 
     echo "CROSS_COMPILE Configured \n"
-
-
-### 
+    
     export PATH=$PATH:/opt/android-ndk/bin
-
-
-### 
     echo "PATH Configured \n"
-
-
-### 
+    
     echo "Run defconfig file. WAIT PLEASE ...\n"
-
-
-### 
-    make x86_64_ranchu_defconfig
-
-
-### 
+    make x86_64_ranchu_defconfig 
     echo "Config finished \n"
-
+```
 Or just run the next script:
 
-
-### 
+``` 
     source 3.third-run-docker.sh
-
+```
 
 ### Step 3.2 - Build
 
 Check and update .config file:
 
-
-### 
-    CONFIG_MODULES=y
-
-
-### 
+```
+    CONFIG_MODULES=y 
     CONFIG_MODULE_UNLOAD=y
-
+```
 Start kernel build:
-
-
-### 
+ 
+```
     make -j4
-
+```
 
 ### Step 4 - Compile module file
 
-
-### 
-    export SYSCALL_TABLE=$(grep sys_call_table $PWD/android-4.14-p-release/System.map | awk '{print $1}')
-
-
-### 
+```
+    export SYSCALL_TABLE=$(grep sys_call_table $PWD/android-4.14-p-release/System.map | awk '{print $1}') 
     echo "SYSCALL_TABLE = " 
-
-
-### 
     echo SYSCALL_TABLE
-
-
-### 
     sed -i s/SYSCALL_TABLE/$SYSCALL_TABLE/g $PWD/androidLKM/lkm_android.c
-
-
-### 
     echo "Sed completed"
-
-
-### 
     cd androidLKM
-
-
-### 
-    echo $PWD
-
-
-### 
+    echo $PWD 
     make
-
-Or just run the next script:
-
-
-### 
+```
+Or just run the next script: 
+```
     sh 4.fourth-run-docker.sh
-
+```
 
 ### Step 5.1 - Start an emulator with Kernel:
 
 Run in the AOSP Folder:
 
-
-### 
+```
     source ~/.bash_profile
-
-
-### 
     source build/envsetup.sh
-
-
-### 
-    lunch aosp_arm_x86_64-eng
-
-
-### 
+    lunch aosp_arm_x86_64-eng 
     emulator -debug init -kernel ~/android-4.14-p-release/arch/arm/boot/zImage -show_kernel
-
+```
 
 ### Step 5.2 - Connect module:
 
 You should have the $ANDROID_HOME path in your .bash_profile file. Next in the console:
 
-
-### 
+```
     adb push $PWD/androidLKM/lkm_android.ko /data/lkm_android.ko
-
-
-### 
     ./adb shell
-
+```
 Or just run the next script:
 
-
-### 
+``` 
     sh 5.fifth-run-adb.sh
-
+```
 
 ### Step 6 - Check applications:
 
 It your adb shell:
 
-
-### 
+```
     cd /data
-
-
-### 
     insmod lkm_android.ko
-
-
-### 
-    lsmod
-
-
-### 
+    lsmod 
     lkm_android 450 - - Live 0x00000000 (PO)
-
-Alld this commands available in the 6.sixth-run-instruction.txt file.
+```
+All this commands available in the 6.sixth-run-instruction.txt file.
 
 
 ### Final - View the results:
 
-
-### 
-    Task sh [PID:1738] make use of this file: /data/data/com.android.providers.contacts/databases/contacts2.db
-
-
-### 
+```
+    Task sh [PID:1738] make use of this file: /data/data/com.android.providers.contacts/databases/contacts2.db 
     Task sh [PID:1738] make use of this file: /data/data/com.facebook.katana/databases
 
+```
 
 <!-- Docs to Markdown version 1.0β17 -->

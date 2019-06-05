@@ -41,7 +41,7 @@ We are listening on the next files list (if you want you can add more):
 
 ## Environment
 
-Important part of this task is using MacOS. Believe us - it isn’t good decision and solution. Finally we advise to use Docker - it’s more easier than install Ubuntu 16.04. Plus after all you will have reusable Docker configuration for using in future.
+An important part of this task was using MacOS. Believe us - it isn’t a good decision and solution. Finally, we advise to use Docker - it’s easier than installing Ubuntu 16.04. Plus after all, you will have reusable Docker configuration for using in future.
 
 All system was built on the macOS Mojave 10.14.5 (18F132). Based on the Google AOSP documentation, we have an ability to build AOSP and Linux Kernel for android on macOS. But actually, it isn't true. We can solve all problems which happen with AOSP building (but believe us it’s a lot), but not with Kernel. After a lot of tests, cases, builds, and configurations we have found a complete solution for implementations.  
 
@@ -53,13 +53,13 @@ For creating this module we have inspired by the next sources:
 
 
 *   CopperDroid – http://s2lab.isg.rhul.ac.uk/papers/files/ndss2015.pdf
-    *   A very old example. There are no cases of using in the web anymore. Previously, it was available as a service for validating applications. But, the useful, interesting document describing the operation of the system behavior helped a lot
+    *   A very old example. There are no cases of using in the web anymore. Previously, it was available as a service for validating applications. But, the useful, interesting document describing the operation of the system behavior helped a lot.
 *   DroidBox – https://github.com/pjlantz/droidbox
     *   Dynamic analysis of applications for Android. The problem is that the DroidBox has not been updated for 4 years and therefore does not work on Android over 4.4 (at the moment available Android 9). But analysis scripts is very interesting for us.
 *   Cuckoo Droid –  https://github.com/idanr1986/cuckoo-droid
     *   It is an extension of the Cuckoo Sandbox Open Source software for automating the analysis of suspicious files, CuckooDroid brings Cuckoo the ability to perform and analyze applications on Android. The problem is that the system is very large and heavy for a proper startup.
 *   Android Syscall Monitor - [https://github.com/invictus1306/Android-syscall-monitor](https://github.com/invictus1306/Android-syscall-monitor)
-    *   Awesome example of creating Android Module for Linux system. Module part of work base on it C module.
+    *   Awesome example of creating Android Module for Linux system. Module part of work based on its module.
 
 
 ## AOSP
@@ -69,13 +69,13 @@ A lot of investigations, documentation, tutorials, articles, and forums. After a
 
 ### Advices:
 
-Configure python2.7 as default on your mac. Repo solution require it.
+* Configure python2.7 as default on your mac. Repo solution require it.
 
-Install Xcode CLI. Even you iOS Developer. 
+* Install Xcode CLI. Even you iOS Developer. 
 
-Install Android Studio and configure all instruments (it would be easier and more reliable than custom installing NDK, LLVM, JDK, etc).
+* Install Android Studio and configure all instruments (it would be easier and more reliable than custom installing NDK, LLVM, JDK, etc).
 
-You need at least 200 gb. You can use external HDD/SSD (but anyway compiling will take long time, really long).
+* You need at least 200 gb. You can use external HDD/SSD (but anyway compiling will take long time, really long).
 
 
 ### Short Guide:
@@ -94,11 +94,11 @@ Set limit to ~/.bash_profile
 ```
 ulimit -S -n 1024
 ```
-Download source. Visit [this page](https://source.android.com/setup/build/downloading) Please choose master branch, based on [Google Forum's](https://groups.google.com/forum/#!topic/android-building/rwf1jQMhW_s) advice it would be the correct choose. We tried to compile AOSP for android-9.0.0_r36 but we got unsolved bugs and problems on MacOS.
+Download source. Visit [this page](https://source.android.com/setup/build/downloading) Please choose the master branch, based on [Google Forum's](https://groups.google.com/forum/#!topic/android-building/rwf1jQMhW_s) advice it would be the correct choice. We tried to compile AOSP for android-9.0.0_r36 but we got unsolved bugs and problems on MacOS.
 
 Building. After repo sync just run the next commands in your terminal:
 
-Attention! Mac not support ARM processors! Don’t use ARM. Believe us.
+Attention! Mac does not support ARM processors! Don’t use ARM. Believe us.
 
 ```
 source build/envsetup.sh
@@ -113,7 +113,7 @@ If everything was correct before you should get working AOSP.
 
 ## Android Kernel
 
-By start Android does not support loadable kernel modules, these are the steps to perform, for the kernel compiling and for the emulation of the Loadable Kernel Module. Also how we know now, we can’t compile Linux Kernel on the Mac operating system. The only one stable and useful solution was using Docker on the board.
+By start Android does not support loadable kernel modules, these are the steps to perform, for the kernel compiling and for the emulation of the Loadable Kernel Module. Also how we know now, we can’t compile Linux Kernel on the Mac operating system. The one stable and useful solution was using Docker on the board.
 
 
 ## Docker

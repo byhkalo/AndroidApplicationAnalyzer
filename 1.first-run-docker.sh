@@ -1,0 +1,1 @@
+docker build -t goldfish_android_kernel .

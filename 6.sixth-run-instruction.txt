@@ -1,0 +1,6 @@
+In ADB Shell
+
+cd /data
+insmod lkm_android.ko
+lsmod
+lkm_android 450 - - Live 0x00000000 (PO)
